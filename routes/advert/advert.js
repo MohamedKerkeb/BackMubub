@@ -6,5 +6,8 @@ const advertController = require("./advertCtrl");
 Router.post("/create", advertController.create);
 Router.get("/advert", advertController.getAdvert);
 Router.get("/search", advertController.searchAdvert);
+Router.get("/update", advertController.getAdvertByUserId);
+Router.get("/update/byid", advertController.getAdvertById);
+Router.put("/update/byid", advertController.putAdvert);
 
 module.exports = Router;

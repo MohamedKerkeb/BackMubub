@@ -22,7 +22,6 @@ app.use("/", usersRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello world");
-  console.log(mysql);
 });
 
 app.listen(PORT, () => {
