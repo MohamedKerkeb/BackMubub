@@ -49,31 +49,59 @@ module.exports = {
     // res.end();
   },
   // Mise en place de la recherche via wilaya
+  // searchAdvert: (req, res, next) => {
+  //   let { wilayaId, categoriesId, title } = req.query;
+  //   let valueTitle = req.body.tilte;
+  //   dbConnect.query(
+  //     "SELECT * FROM annonces WHERE wilayaId = ? && categoriesId = ? && title LIKE ?",
+  //     [wilayaId, categoriesId, "%" + title + "%"],
+  //     (err, result) => {
+  //       if (err) {
+  //         throw err;
+  //       } else {
+  //         if (result === null) {
+  //           res.status(500).send({
+  //             data: "Il n'y pas d'annonce"
+  //           });
+  //         } else {
+  //           res.status(200).send({
+  //             err: false,
+  //             data: result,
+  //             message: "recherche"
+  //           });
+  //         }
+  //       }
+  //     }
+  //   );
+  // },
+  // Teste poour les Recherche
   searchAdvert: (req, res, next) => {
     let { wilayaId, categoriesId, title } = req.query;
-    //let advTitle = req.body.tilte;
-    dbConnect.query(
-      "SELECT * FROM annonces WHERE wilayaId = ? && categoriesId = ? && title LIKE %?%",
-      [wilayaId, categoriesId, title],
-      (err, result) => {
-        if (err) {
-          throw err;
-        } else {
-          if (result === null) {
-            res.status(500).send({
-              data: "Il n'y pas d'annonce"
-            });
-          } else {
-            res.status(200).send({
-              err: false,
-              data: result,
-              message: "recherche"
-            });
-          }
-        }
+    let colle = "SELECT * FROM annonces";
+    // http://localhost:3000/search?wilayaId=22&categoriesId=5&title=samsung
+
+    if (wilayaId != "" && categoriesId != "" && title != "") {
+      (colle =
+        "SELECT * FROM annonces WHERE wilayaId = ? && categoriesId = ? && title LIKE ?"),
+        [wilayaId, categoriesId, "%" + title + "%"];
+    } else if (wilayaId != "" && categoriesId != "" && title == "") {
+      (colle = "SELECT * FROM annonces WHERE wilayaId = ? && categoriesId = ?"),
+        [wilayaId, categoriesId];
+    }
+    dbConnect.query(colle, (err, result) => {
+      console.log(colle);
+      if (err) {
+        throw err;
+      } else {
+        res.status(200).send({
+          err: false,
+          data: result,
+          message: "test message"
+        });
       }
-    );
+    });
   },
+
   // MISE A JOUR DES ANNONCES
   // recuperations de toutes les annonces de l'useur avec son id
   getAdvertByUserId: (req, res, next) => {
