@@ -74,19 +74,34 @@ module.exports = {
   //     }
   //   );
   // },
-  // Teste poour les Recherche
+  //Teste poour les Recherche
   searchAdvert: (req, res, next) => {
     let { wilayaId, categoriesId, title } = req.query;
     let colle = "SELECT * FROM annonces";
     // http://localhost:3000/search?wilayaId=22&categoriesId=5&title=samsung
 
-    if (wilayaId != "" && categoriesId != "" && title != "") {
-      (colle =
-        "SELECT * FROM annonces WHERE wilayaId = ? && categoriesId = ? && title LIKE ?"),
-        [wilayaId, categoriesId, "%" + title + "%"];
-    } else if (wilayaId != "" && categoriesId != "" && title == "") {
-      (colle = "SELECT * FROM annonces WHERE wilayaId = ? && categoriesId = ?"),
-        [wilayaId, categoriesId];
+    console.log(wilayaId);
+    console.log(categoriesId);
+    console.log(title);
+
+    // const allSearch =
+    //   "SELECT * FROM annonces WHERE wilayaId = " +
+    //   wilayaId +
+    //   " && categoriesId = " +
+    //   categoriesId +
+    //   " && title LIKE " +
+    //   "%" +
+    //   title +
+    //   "%";
+
+    const allSearch = `SELECT * FROM annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId} && title LIKE "%${title}%"`;
+
+    const secondSearch = `SELECT * FROM annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId}`;
+
+    if (wilayaId !== "" && categoriesId !== "" && title !== "") {
+      colle = allSearch;
+    } else if (wilayaId !== "" && categoriesId !== "" && title == "") {
+      colle = secondSearch;
     }
     dbConnect.query(colle, (err, result) => {
       console.log(colle);
