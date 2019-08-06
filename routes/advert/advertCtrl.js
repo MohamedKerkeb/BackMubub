@@ -78,31 +78,17 @@ module.exports = {
   searchAdvert: (req, res, next) => {
     let { wilayaId, categoriesId, title } = req.query;
     let colle = "SELECT * FROM annonces";
-    // http://localhost:3000/search?wilayaId=22&categoriesId=5&title=samsung
-
-    console.log(wilayaId);
-    console.log(categoriesId);
-    console.log(title);
-
-    // const allSearch =
-    //   "SELECT * FROM annonces WHERE wilayaId = " +
-    //   wilayaId +
-    //   " && categoriesId = " +
-    //   categoriesId +
-    //   " && title LIKE " +
-    //   "%" +
-    //   title +
-    //   "%";
 
     const allSearch = `SELECT * FROM annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId} && title LIKE "%${title}%"`;
 
-    const secondSearch = `SELECT * FROM annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId}`;
+    const secondSearch = `SELECT * FROM annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId} `;
 
     if (wilayaId !== "" && categoriesId !== "" && title !== "") {
       colle = allSearch;
     } else if (wilayaId !== "" && categoriesId !== "" && title == "") {
       colle = secondSearch;
     }
+
     dbConnect.query(colle, (err, result) => {
       console.log(colle);
       if (err) {
