@@ -44,18 +44,40 @@ module.exports = {
       }
     );
   },
-  getUser: (req, res, next) => {
+  getUserById: (req, res, next) => {
     console.log("get Users");
-    dbConnect.query("SELECT * FROM users", (err, result) => {
-      if (err) {
-        throw err;
-      } else {
-        res.status(200).send({
-          err: false,
-          data: result,
-          message: "complet users"
-        });
+    dbConnect.query(
+      "SELECT * FROM users WHERE idusers = ?",
+      req.query.id,
+      (err, result) => {
+        if (err) {
+          throw err;
+        } else {
+          res.status(200).send({
+            err: false,
+            data: result,
+            message: "complet users"
+          });
+        }
       }
-    });
+    );
+  },
+  updateUserById: (req, res, next) => {
+    const body = req.body;
+    dbConnect.query(
+      "UPDATE users SET ? WHERE idusers = ?",
+      [body, req.query.id],
+      (err, result) => {
+        if (err) {
+          throw err;
+        } else {
+          res.status(200).send({
+            err: false,
+            data: result,
+            message: "update user reussi"
+          });
+        }
+      }
+    );
   }
 };

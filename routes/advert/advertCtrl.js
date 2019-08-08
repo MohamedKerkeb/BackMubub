@@ -48,6 +48,7 @@ module.exports = {
     });
     // res.end();
   },
+
   // Mise en place de la recherche via wilaya
   // searchAdvert: (req, res, next) => {
   //   let { wilayaId, categoriesId, title } = req.query;
@@ -74,6 +75,7 @@ module.exports = {
   //     }
   //   );
   // },
+
   //Teste poour les Recherche
   searchAdvert: (req, res, next) => {
     let { wilayaId, categoriesId, title } = req.query;
@@ -122,6 +124,7 @@ module.exports = {
       }
     );
   },
+
   // Choix de l'annonces via l'id de l'user et de l'annonce
   getAdvertById: (req, res, next) => {
     const { usersId, idannonces } = req.query;
