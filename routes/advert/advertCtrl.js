@@ -9,12 +9,14 @@ module.exports = {
       price,
       categoriesId,
       usersId,
-      wilayaId
+      wilayaId,
+      img1,
+      img2
     } = req.body;
 
     dbConnect.query(
-      "INSERT INTO annonces (title, description, price, categoriesId, usersId, wilayaId) VALUES (?,?,?,?,?,?)",
-      [title, description, price, categoriesId, usersId, wilayaId],
+      "INSERT INTO Annonces (title, description, price, categoriesId, usersId, wilayaId, img1, img2) VALUES (?,?,?,?,?,?)",
+      [title, description, price, categoriesId, usersId, wilayaId, img1, img2],
       (err, result) => {
         // advert.end();
         if (err) {
@@ -25,14 +27,23 @@ module.exports = {
       }
     );
 
-    console.log(title, description, price, categoriesId, usersId, wilayaId);
+    console.log(
+      title,
+      description,
+      price,
+      categoriesId,
+      usersId,
+      wilayaId,
+      img1,
+      img2
+    );
     // res.end();
   },
   getAdvert: (req, res, next) => {
     console.log("Get all Advert");
     const { title, wilaya, town, price, description } = req.body;
 
-    dbConnect.query("SELECT * FROM annonces LIMIT 20", (err, result) => {
+    dbConnect.query("SELECT * FROM Annonces LIMIT 20", (err, result) => {
       // advert.end();
       if (err) {
         // res.status(500).json(err);
@@ -40,7 +51,7 @@ module.exports = {
       } else {
         res.status(200).send({
           err: false,
-          data: result,
+          data: result ? result : "pas encore d annoce",
           message: "complet advert"
         });
         // res.status(200).json(result);
@@ -79,11 +90,11 @@ module.exports = {
   //Teste poour les Recherche
   searchAdvert: (req, res, next) => {
     let { wilayaId, categoriesId, title } = req.query;
-    let colle = "SELECT * FROM annonces";
+    let colle = "SELECT * FROM Annonces";
 
-    const allSearch = `SELECT * FROM annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId} && title LIKE "%${title}%"`;
+    const allSearch = `SELECT * FROM Annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId} && title LIKE "%${title}%"`;
 
-    const secondSearch = `SELECT * FROM annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId} `;
+    const secondSearch = `SELECT * FROM Annonces WHERE wilayaId = ${wilayaId} && categoriesId = ${categoriesId} `;
 
     if (wilayaId !== "" && categoriesId !== "" && title !== "") {
       colle = allSearch;
@@ -108,9 +119,10 @@ module.exports = {
   // MISE A JOUR DES ANNONCES
   // recuperations de toutes les annonces de l'useur avec son id
   getAdvertByUserId: (req, res, next) => {
+    const id = req.query.usersId;
     dbConnect.query(
-      "SELECT * FROM annonces WHERE usersId= ?",
-      req.query.id,
+      "SELECT * FROM Annonces WHERE usersId= ?",
+      id,
       (err, result) => {
         if (err) {
           throw err;
@@ -130,7 +142,7 @@ module.exports = {
     const { usersId, idannonces } = req.query;
 
     dbConnect.query(
-      "SELECT * FROM annonces WHERE usersId = ? && idannonces = ?",
+      "SELECT * FROM Annonces WHERE usersId = ? && idannonces = ?",
       [usersId, idannonces],
       //[2, 3],
       (err, result) => {
@@ -152,7 +164,7 @@ module.exports = {
     const { idannonces, usersId } = req.query;
     const body = req.body;
     dbConnect.query(
-      "UPDATE annonces SET ? WHERE idannonces = ? && usersId = ?",
+      "UPDATE Annonces SET ? WHERE idannonces = ? && usersId = ?",
       [body, idannonces, usersId],
       (err, result) => {
         if (err) {

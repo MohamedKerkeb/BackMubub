@@ -46,8 +46,7 @@ module.exports = {
 
     if (password !== password2) {
       return res.status(400).json({
-        error:
-          "password invalid (must length 4 - 8 and include 1 number at least"
+        error: "password invalid (password are not identical)"
       });
     }
 
@@ -66,9 +65,12 @@ module.exports = {
     }
 
     dbConnect.query(
-      "SELECT * FROM users WHERE email= ?",
+      "SELECT * FROM Users WHERE email= ?",
       email,
       (err, user) => {
+        if (err) {
+          throw err;
+        }
         //console.log("user", user.length);
         if (user.length === 0) {
           //console.log("lol");
@@ -76,7 +78,7 @@ module.exports = {
             password = hash;
             console.log(password);
             dbConnect.query(
-              "INSERT INTO users (firstname, lastname, email, password, isAdmin, isActif, username, adress, phone, codePostal, town, wilayaId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+              "INSERT INTO Users (firstname, lastname, email, password, isAdmin, isActif, username, adress, phone, codePostal, town, wilayaId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
               [
                 firstname,
                 lastname,
@@ -93,10 +95,16 @@ module.exports = {
               ],
               (err, result) => {
                 if (err) {
-                  res.status(500).json(err);
+                  res.status(500).json({
+                    erreur: err,
+                    message: "On arrrive as créer users"
+                  });
                 } else {
                   // console.log(password);
-                  res.status(200).json(result);
+                  res
+                    .status(200)
+                    .redirect("/login")
+                    .json(result);
                 }
               }
             );
@@ -131,5 +139,33 @@ module.exports = {
     //     }
     //   }
     // );
+  },
+
+  login: (req, res) => {
+    const { email, password } = req.body;
+
+    if (email == null || password == null) {
+      return res.status(400).json({ error: "Missing Parameters" });
+    }
+
+    dbConnect.query(
+      "SELECT * FROM Users WHERE email= ?",
+      email,
+      (err, user) => {
+        if (err) {
+          throw err;
+        }
+        if (user) {
+          bcrypt.compare(password, user.password, (errBcpt, resBcpt) => {
+            if (resBcpt) {
+              console.log(userId);
+              return res.status(200).json({
+                userId: user.is
+              });
+            }
+          });
+        }
+      }
+    );
   }
 };
